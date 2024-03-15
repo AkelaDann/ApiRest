@@ -1,4 +1,10 @@
+using ApiRest.Application;
+
 var builder = WebApplication.CreateBuilder(args);
+{
+    builder.Services.AddApplication();
+    builder.Services.AddControllers();
+}
 
 // Add services to the container.
 

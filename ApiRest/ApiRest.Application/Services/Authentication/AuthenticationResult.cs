@@ -11,6 +11,6 @@ namespace ApiRest.Application.Services.Authentication
         string FirstName,
         string LastName,
         string Email,
-        string token
-        );
+        string Token
+    );
 }

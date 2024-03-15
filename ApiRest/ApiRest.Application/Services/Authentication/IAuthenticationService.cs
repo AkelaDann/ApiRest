@@ -11,6 +11,6 @@ namespace ApiRest.Application.Services.Authentication
     {
         AuthenticationResult Register(string firstName,string LastName,string email,string token);
 
-        AuthenticationResult Login(string email, string password);
+        AuthenticationResult Login (string email, string password);
     }
 }

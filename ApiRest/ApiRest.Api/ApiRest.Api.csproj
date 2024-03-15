@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ApiRest.Application\ApiRest.Application.csproj" />
-    <ProjectReference Include="..\ApiRest.Infraestructure\ApiRest.Infraestructure.csproj" />
   </ItemGroup>
 
 </Project>

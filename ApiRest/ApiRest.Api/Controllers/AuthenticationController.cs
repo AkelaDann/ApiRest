@@ -20,7 +20,7 @@ namespace ApiRest.Api.Controllers
         [HttpPost("Register")]
         public ActionResult Register( RegisterRequest request)
         {
-            var authResult = _authenticationService.Register(request.Email,request.Email,request.Email, request.Password);
+            //var authResult = _authenticationService.Register( request.Email, request.Password);
             return Ok(request);
         }
 

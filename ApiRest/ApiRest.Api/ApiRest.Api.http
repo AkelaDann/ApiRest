@@ -1,8 +1,14 @@
-@ApiRest.Api_HostAddress = http://localhost:44385
+@Address = http://localhost:7291
 
-POST {{ApiRest.Api_HostAddress}}/auth/Login
+POST @{{Address}}/auth/Login
 Content-Type: application/json
+
+{
+  "email": "dgallardo@dim",
+  "password": "holamundo"
+}
+
 
 
 ###
-POST {{ApiRest.Api_HostAddress}}/auth/Register
+POST @{{Address}}/auth/Register
