@@ -1,0 +1,8 @@
+@ApiRest.Api_HostAddress = http://localhost:44385
+
+POST {{ApiRest.Api_HostAddress}}/auth/Login
+Content-Type: application/json
+
+
+###
+POST {{ApiRest.Api_HostAddress}}/auth/Register
