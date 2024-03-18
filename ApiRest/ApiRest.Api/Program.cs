@@ -2,7 +2,9 @@ using ApiRest.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder.Services.AddApplication();
+    builder.Services
+        .AddApplication()
+        .AddInfraestructure();
     builder.Services.AddControllers();
 }
 

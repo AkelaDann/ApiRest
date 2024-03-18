@@ -1,7 +1,5 @@
 ﻿using ApiRest.Application.Services.Authentication;
-using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
+using ApiRest.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRest.Api.Controllers
@@ -17,18 +15,20 @@ namespace ApiRest.Api.Controllers
                 _authenticationService = authenticationServices;
         }
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public ActionResult Register( RegisterRequest request)
         {
-            //var authResult = _authenticationService.Register( request.Email, request.Password);
-            return Ok(request);
+            var authResult = _authenticationService.Register(request.FirstName,request.LastName, request.Email, request.Password);
+            var response = new AuthenticationResponse(authResult.Id,authResult.FirstName,authResult.LastName, authResult.Email,authResult.Token);
+            return Ok(response);
         }
 
-        [HttpPost("Login")]
+        [HttpPost("login")]
         public ActionResult Login(LoginRequest request)
         {
-            
-            return Ok(request);
+            var authResult = _authenticationService.Login( request.Email, request.Password);
+            var response = new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName, authResult.Email, authResult.Token);
+            return Ok(response);
         }
     }
 }
