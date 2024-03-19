@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 namespace ApiRest.Domain.Entities
 {
     public record LoginRequest
-    (
-        string FirstName,
-        string LastName,
+    (        
         string Email,
         string Password
     );

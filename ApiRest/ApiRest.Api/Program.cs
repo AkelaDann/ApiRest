@@ -1,10 +1,14 @@
+using ApiRest.Api.Filters;
+using ApiRest.Api.Middleware;
 using ApiRest.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services
         .AddApplication()
-        .AddInfraestructure();
+        .AddInfraestructure(builder.Configuration);
+    // segunda forma de implementar el control de errores a todos los controladores
+    //builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
     builder.Services.AddControllers();
 }
 
@@ -24,10 +28,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+{
+    //implementacion de control de errores Midldleware
+    //app.UseMiddleware<ErrorHandlingMiddleware>();
 
-app.UseAuthorization();
+    //
+    app.UseExceptionHandler("/error");
+    app.UseHttpsRedirection();
+    app.UseAuthorization();
+    app.MapControllers();
+    app.Run();
+}
 
-app.MapControllers();
 
-app.Run();
+
