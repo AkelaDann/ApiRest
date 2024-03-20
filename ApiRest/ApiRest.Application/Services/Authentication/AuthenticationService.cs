@@ -1,12 +1,10 @@
 ﻿using ApiRest.Application.Common.Errors;
 using ApiRest.Application.Common.Interfaces.Authentication;
 using ApiRest.Application.Common.Interfaces.Persistence;
+using ApiRest.Domain.Common.Errors;
 using ApiRest.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ErrorOr;
+using FluentResults;
 
 namespace ApiRest.Application.Services.Authentication
 {
@@ -19,12 +17,16 @@ namespace ApiRest.Application.Services.Authentication
             _jwtTokenGenerator = jwtTokenGenerator;
             _userRepository = userRepository;
         }
-        public AuthenticationResult Register(string firstName, string lastName, string email, string password)
+        //public oneof <AuthenticationResult,Ierror> Register(string firstName, string lastName, string email, string password)
+        //public Result <AuthenticationResult> Register(string firstName, string lastName, string email, string password)
+        public ErrorOr <AuthenticationResult> Register(string firstName, string lastName, string email, string password)
         {
             // usuario existe?
             if(_userRepository.GetUserByEmail(email) is not null)
             {
-                throw new DuplicateEmailException();
+                return Errors.User.DuplicateEmail;
+                //return Result.Fail<AuthenticationResult>(new[] { new DuplicateEmailError() });
+                //restaurar metodo OneOF
             }
 
             //crear usuario
@@ -42,17 +44,17 @@ namespace ApiRest.Application.Services.Authentication
 
             return new AuthenticationResult(user, token);
         }
-        public AuthenticationResult Login(string email, string password)
+        public ErrorOr<AuthenticationResult>Login(string email, string password)
         {
             //validar user exist
             if(_userRepository.GetUserByEmail(email) is not User user)
             {
-                throw new Exception("User with given email does not exists");
+                return Errors.Authentication.InvalidCredentials;
             }
             //validar password 
             if(user.Password != password)
             {
-                throw new Exception("Invalid Password.");
+                return Errors.Authentication.IncorrectPassword;
             }
 
             //generar JWT

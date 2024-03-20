@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services
         .AddApplication()
         .AddInfraestructure(builder.Configuration);
-    // segunda forma de implementar el control de errores a todos los controladores
+    // segunda forma de implementar el control de errores FilterAttribute a todos los controladores
     //builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
     builder.Services.AddControllers();
 }

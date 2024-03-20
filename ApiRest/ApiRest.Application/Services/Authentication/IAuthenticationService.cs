@@ -1,16 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ErrorOr;
+using FluentResults;
 
 namespace ApiRest.Application.Services.Authentication
 {
     public interface IAuthenticationService
     {
-        AuthenticationResult Register(string firstName,string LastName,string email,string token);
+        //ErrorOr Method
+        ErrorOr<AuthenticationResult> Register(string firstName,string LastName,string email,string token);
+        //FluentResult Method
+        //Result<AuthenticationResult> Register(string firstName,string LastName,string email,string token);
+        //OneOF Method
+        //OneOf<AuthenticationResult,Ierror> Register(string firstName,string LastName,string email,string token);
 
-        AuthenticationResult Login (string email, string password);
+        ErrorOr<AuthenticationResult> Login (string email, string password);
     }
 }
