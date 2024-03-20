@@ -1,6 +1,8 @@
+using ApiRest.Api.Common.Errors;
 using ApiRest.Api.Filters;
 using ApiRest.Api.Middleware;
 using ApiRest.Application;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 {
@@ -15,6 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddSingleton<ProblemDetailsFactory, ApiRestProblemDetailsFactory>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

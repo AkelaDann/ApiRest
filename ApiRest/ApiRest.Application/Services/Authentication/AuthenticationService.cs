@@ -1,4 +1,5 @@
-﻿using ApiRest.Application.Common.Interfaces.Authentication;
+﻿using ApiRest.Application.Common.Errors;
+using ApiRest.Application.Common.Interfaces.Authentication;
 using ApiRest.Application.Common.Interfaces.Persistence;
 using ApiRest.Domain.Entities;
 using System;
@@ -23,7 +24,7 @@ namespace ApiRest.Application.Services.Authentication
             // usuario existe?
             if(_userRepository.GetUserByEmail(email) is not null)
             {
-                throw new Exception("User with given email already exists.");
+                throw new DuplicateEmailException();
             }
 
             //crear usuario
