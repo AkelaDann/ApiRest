@@ -1,39 +1,53 @@
-﻿using ApiRest.Api.Filters;
-using ApiRest.Application.Common.Errors;
-using ApiRest.Application.Services.Authentication;
+﻿using ApiRest.Application.Authentication.Command.Register;
+using ApiRest.Application.Services.Authentication.Common;
+using ApiRest.Domain.Common.Errors;
 using ApiRest.Domain.Entities;
 using ErrorOr;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRest.Api.Controllers
 {
-    
+
     [Route("auth")]
-    [ApiController]
-    //[ErrorHandlingFilter] // aplica control de errores por filtro por controlador
-    public class AuthenticationController : ControllerBase
+    
+    //[ErrorHandlingFilter] // aplica control de errores por FilterAttribute por controlador
+    public class AuthenticationController : ApiController
     {
-        private readonly IAuthenticationService _authenticationService;
-        public AuthenticationController(IAuthenticationService authenticationServices)
+        #region other inyection services
+        //private readonly IAuthenticationCommandService _authenticationCommandService;
+        //private readonly IAuthenticationQueryService _authenticationQueryService;
+        //public AuthenticationController(IAuthenticationCommandService authenticationCommandService, IAuthenticationQueryService authenticationQueryService)
+        //{
+        //        _authenticationCommandService = authenticationCommandService;
+        //        _authenticationQueryService = authenticationQueryService;
+        //}
+        #endregion
+        private readonly IMediator _mediator;
+        public AuthenticationController(IMediator mediator)
         {
-                _authenticationService = authenticationServices;
+            _mediator = mediator;
         }
 
         [HttpPost("register")]
-        public ActionResult Register( RegisterRequest request)
+        public async Task<IActionResult> Register( RegisterRequest request)
         {
-            //FluentResults.Result<AuthenticationResult> RegisterResult = _authenticationService.Register(
-            ErrorOr<AuthenticationResult>authResult = _authenticationService.Register(
-                request.FirstName,
-                request.LastName,
-                request.Email,
-                request.Password);
 
+            var command = new RegisterCommand(request.FirstName, request.LastName, request.Email, request.Password);
+
+            ErrorOr<AuthenticationResult> authResult =await _mediator.Send(command);
             
-                return authResult.MatchFirst(
+                return authResult.Match(
                     authResult=> Ok(MapAuthResult( authResult)),
-                    firstError=> Problem(statusCode: StatusCodes.Status409Conflict, title: firstError.Description));
-           
+                    errors => Problem(errors));
+            #region other Methods
+            //FluentResults.Result<AuthenticationResult> RegisterResult = _authenticationService.Register(
+
+            //ErrorOr<AuthenticationResult>authResult = _authenticationCommandService.Register(
+            //request.FirstName,
+            //request.LastName,
+            //request.Email,
+            //request.Password);
 
             //FluentResults Method
             //if (RegisterResult.IsSuccess)
@@ -62,7 +76,7 @@ namespace ApiRest.Api.Controllers
             //    return Ok(response);
             //}
             //return Problem(statusCode: StatusCodes.Status409Conflict, title: "Email aldready exists.");
-
+            #endregion
         }
         private static AuthenticationResponse MapAuthResult(AuthenticationResult authResult)
         {
@@ -75,16 +89,26 @@ namespace ApiRest.Api.Controllers
         }
 
         [HttpPost("login")]
-        public ActionResult Login(LoginRequest request)
+        public IActionResult Login(LoginRequest request)
         {
-            var authResult = _authenticationService.Login( request.Email, request.Password);
-            var response = new AuthenticationResponse(
-                authResult.user.Id,
-                authResult.user.FirstName,
-                authResult.user.LastName,
-                authResult.user.Email,
-                authResult.Token);
-            return Ok(response);
+            var authResult = _authenticationQueryService.Login( request.Email, request.Password);
+
+            if(authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
+            {
+                return Problem(statusCode: StatusCodes.Status401Unauthorized, title: authResult.FirstError.Description);
+            }
+
+            return authResult.Match(
+                authResult => Ok(MapAuthResult(authResult)),
+                errors => Problem(errors));
+
+            //var response = new AuthenticationResponse(
+            //    authResult.user.Id,
+            //    authResult.user.FirstName,
+            //    authResult.user.LastName,
+            //    authResult.user.Email,
+            //    authResult.Token);
+            //return Ok(response);
         }
     }
 }

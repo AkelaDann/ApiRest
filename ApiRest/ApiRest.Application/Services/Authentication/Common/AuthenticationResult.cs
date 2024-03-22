@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApiRest.Application.Services.Authentication
+namespace ApiRest.Application.Services.Authentication.Common
 {
     public record AuthenticationResult(
         User user,

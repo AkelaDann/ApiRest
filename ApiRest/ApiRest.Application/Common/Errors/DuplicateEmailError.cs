@@ -1,18 +1,17 @@
-﻿using FluentResults;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ErrorOr;
 
 namespace ApiRest.Application.Common.Errors
 {
-    public class DuplicateEmailError : IError
+    public class DuplicateEmailError : IErrorOr
     {
-        public List<IError> Reasons => throw new NotImplementedException();
+        public List<Error> Reasons => throw new NotImplementedException();
 
         public Dictionary<string, object> Metadata => throw new NotImplementedException();
 
         public string Message => throw new NotImplementedException();
+
+        public List<Error>? Errors => throw new NotImplementedException();
+
+        public bool IsError => throw new NotImplementedException();
     }
 }

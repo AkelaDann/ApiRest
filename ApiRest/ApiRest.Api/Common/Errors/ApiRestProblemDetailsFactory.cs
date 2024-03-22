@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using ErrorOr;
+using ApiRest.Api.Common.Http;
 
 namespace ApiRest.Api.Common.Errors
 {
@@ -90,8 +92,13 @@ namespace ApiRest.Api.Common.Errors
             {
                 problemDetails.Extensions["traceId"] = traceId;
             }
+            var errors = httpContext?.Items[HttpContextItemKeys.Errors] as List<Error>;
 
-            problemDetails.Extensions.Add("CustomProperty", "CustomValue");
+            if(errors is not null) 
+            {                
+                problemDetails.Extensions.Add("errorCodes", errors.Select(e => e.Code) ); 
+            }
+
         }
     }
 }
